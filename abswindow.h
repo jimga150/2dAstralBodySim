@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include <QPainterPath>
+#include <QResizeEvent>
 
 #include "box2d/box2d.h"
 
@@ -83,6 +84,11 @@ public:
 
     b2Vec2 viewcenter_m = b2Vec2(0, 0);
     float viewscale_p_m = 1;
+
+
+protected:
+
+    void resizeEvent(QResizeEvent* event) override;
 
 };
 

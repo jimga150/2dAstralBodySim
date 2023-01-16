@@ -41,6 +41,10 @@ ABSWindow::~ABSWindow(){
     delete this->world;
 }
 
+void ABSWindow::resizeEvent(QResizeEvent* event){
+    this->window_size = event->size();
+}
+
 void ABSWindow::setupWindow(){
     QScreen* screen = this->screen();
 
