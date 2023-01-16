@@ -18,23 +18,20 @@ ABSWindow::ABSWindow(){
 
     this->world = new b2World(b2Vec2(0, 0)); //no global gravity
 
-    b2BodyDef def;
-    def.type = b2_dynamicBody;
+    this->bodydef_template.type = b2_dynamicBody;
 
-    b2CircleShape circle_shape;
-    circle_shape.m_radius = 10;
+    this->circle_shape.m_radius = 10;
 
-    b2FixtureDef fixture_template;
-    fixture_template.density = 1;
-    fixture_template.shape = &circle_shape;
+    fixturedef_template.density = 1;
+    fixturedef_template.shape = &circle_shape;
 
-    def.position.Set(50, 0);
-    b2Body* b = this->world->CreateBody(&def);
-    b->CreateFixture(&fixture_template);
+    this->bodydef_template.position.Set(50, 0);
+    b2Body* b = this->world->CreateBody(&this->bodydef_template);
+    b->CreateFixture(&fixturedef_template);
 
-    def.position.Set(-50, 0);
-    b = this->world->CreateBody(&def);
-    b->CreateFixture(&fixture_template);
+    this->bodydef_template.position.Set(-50, 0);
+    b = this->world->CreateBody(&this->bodydef_template);
+    b->CreateFixture(&fixturedef_template);
 }
 
 ABSWindow::~ABSWindow(){
@@ -43,6 +40,22 @@ ABSWindow::~ABSWindow(){
 
 void ABSWindow::resizeEvent(QResizeEvent* event){
     this->window_size = event->size();
+}
+
+void ABSWindow::mousePressEvent(QMouseEvent *ev){
+
+}
+
+void ABSWindow::mouseReleaseEvent(QMouseEvent *ev){
+    b2Vec2 pos = this->scrnPtToPhysPt(ev->position());
+    this->bodydef_template.position = pos;
+    b2Body* b = this->world->CreateBody(&this->bodydef_template);
+    b->CreateFixture(&fixturedef_template);
+    printf("creating body at (%f, %f)\n", pos.x, pos.y);
+}
+
+void ABSWindow::mouseMoveEvent(QMouseEvent *ev){
+
 }
 
 void ABSWindow::setupWindow(){
@@ -164,6 +177,13 @@ QPointF ABSWindow::physPtToScrnPt(b2Vec2 worldPoint_m){
     return QPointF(
                 (worldPoint_m.x - this->viewcenter_m.x)*this->viewscale_p_m + this->window_size.width()/2,
                 (worldPoint_m.y - this->viewcenter_m.y)*this->viewscale_p_m + this->window_size.height()/2
+                );
+}
+
+b2Vec2 ABSWindow::scrnPtToPhysPt(QPointF screenPoint_p){
+    return b2Vec2(
+                (screenPoint_p.x() - this->window_size.width()/2)/this->viewscale_p_m + this->viewcenter_m.x,
+                (screenPoint_p.y() - this->window_size.height()/2)/this->viewscale_p_m + this->viewcenter_m.y
                 );
 }
 

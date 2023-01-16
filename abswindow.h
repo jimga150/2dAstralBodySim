@@ -70,6 +70,8 @@ public:
 
     QPointF physPtToScrnPt(b2Vec2 worldPoint_m);
 
+    b2Vec2 scrnPtToPhysPt(QPointF screenPoint_p);
+
 
     QSize window_size;
 
@@ -85,10 +87,19 @@ public:
     b2Vec2 viewcenter_m = b2Vec2(0, 0);
     float viewscale_p_m = 1;
 
+    b2BodyDef bodydef_template;
+    b2FixtureDef fixturedef_template;
+    b2CircleShape circle_shape;
 
 protected:
 
     void resizeEvent(QResizeEvent* event) override;
+
+    void mousePressEvent(QMouseEvent* ev) override;
+
+    void mouseReleaseEvent(QMouseEvent* ev) override;
+
+    void mouseMoveEvent(QMouseEvent* ev) override;
 
 };
 
