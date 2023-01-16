@@ -77,8 +77,8 @@ public:
 
 
     //scaled up to increase scale of stuff
-    //normally is *10^-11
-    const float big_G = 6.6743015*pow(10, -1); //N*m^2/(kg^2)
+    //normally is 6.6743015*10^-11
+    const float big_G = 6.6743015*pow(10, 0); //N*m^2/(kg^2)
 
     b2World* world = nullptr;
 
