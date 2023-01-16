@@ -63,7 +63,7 @@ void ABSWindow::render(QPainter &painter){
         this->drawBodyTo(&painter, b);
     }
 
-    printf("render\n");
+//    printf("render\n");
 
 }
 
@@ -75,7 +75,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     painter->save();
     b2Vec2 pos = body->GetPosition();
     QPointF body_center_px = this->physPtToScrnPt(pos);
-    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
+//    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
     painter->translate(body_center_px.x(), body_center_px.y());
 
 //    //https://stackoverflow.com/questions/8881923/how-to-convert-a-pointer-value-to-qstring
@@ -171,11 +171,11 @@ void ABSWindow::doGameStep(){
             if (ob == b) continue;
             b2Vec2 vect_to_ob = ob->GetWorldCenter() - b->GetWorldCenter();
             float force_mag = big_G*ob->GetMass()*b->GetMass()/vect_to_ob.LengthSquared();
-            printf("Force magnitude between b and ob: %f N\n", force_mag);
+//            printf("Force magnitude between b and ob: %f N\n", force_mag);
             b2Vec2 force_to_add = vect_to_ob;
             force_to_add.Normalize();
             force_to_add *= force_mag;
-            printf("Adding force: x = %f, y = %f\n", force_to_add.x, force_to_add.y);
+//            printf("Adding force: x = %f, y = %f\n", force_to_add.x, force_to_add.y);
             ForceAccum += force_to_add;
         }
         b->ApplyLinearImpulseToCenter(ForceAccum, true);
@@ -185,5 +185,5 @@ void ABSWindow::doGameStep(){
     int positionIterations = 3;
     this->world->Step(this->timeStep_s, velocityIterations, positionIterations);
 
-    printf("step: ts = %f s\n", this->timeStep_s);
+//    printf("step: ts = %f s\n", this->timeStep_s);
 }
