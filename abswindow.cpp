@@ -141,6 +141,27 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
 //    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
     painter->translate(body_center_px.x(), body_center_px.y());
 
+    float radius = body->GetFixtureList()->GetShape()->m_radius;
+
+    //this is the HSV hue for light blue, which is where we want this spectrum to cap.
+    float max_hue = 0.6;
+
+    float hue = max_hue*log(radius/10.0)/2.0; //maps 10 and 1000 to 0 and max_hue logarithmically
+//    printf("radius: %f; hue: %f\n", radius, hue);
+
+    //cap hue to [0, max_hue]
+    if (hue < 0) hue = 0;
+    if (hue > max_hue) hue = max_hue;
+
+    //reverse hue so blue is little things and red is big things
+    hue = max_hue - hue;
+
+    QColor body_color;
+    body_color.setHsvF(hue, 0.8, 1.0);
+
+    painter->setPen(body_color);
+    painter->setBrush(body_color);
+
 //    //https://stackoverflow.com/questions/8881923/how-to-convert-a-pointer-value-to-qstring
 //    QString ptrStr = QString("0x%1").arg(reinterpret_cast<quintptr>(body),QT_POINTER_SIZE * 2, 16, QChar('0'));
 //    //QString coordstr = QString("(%1, %2)").arg(body->GetPosition().x).arg(body->GetPosition().y);
