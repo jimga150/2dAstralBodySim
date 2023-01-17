@@ -5,6 +5,7 @@
 
 #include <QPainterPath>
 #include <QResizeEvent>
+#include <QHash>
 
 #include "box2d/box2d.h"
 
@@ -75,6 +76,8 @@ public:
 
     b2Body* createBody(float radius, b2Vec2 position, b2Vec2 velocity);
 
+    void destroyBody(b2Body* b);
+
 
     QSize window_size;
 
@@ -100,6 +103,9 @@ public:
     b2BodyDef bodydef_template;
     b2FixtureDef fixturedef_template;
     b2CircleShape circle_shape;
+
+    QHash<b2Body*, std::vector<b2Vec2>*> position_histories;
+    uint max_position_hist_entries = 100;
 
 protected:
 

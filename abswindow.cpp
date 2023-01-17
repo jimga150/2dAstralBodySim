@@ -141,9 +141,23 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
 
     painter->save();
     b2Vec2 pos = body->GetPosition();
-    QPointF body_center_px = this->physPtToScrnPt(pos);
 //    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
-    painter->translate(body_center_px.x(), body_center_px.y());
+
+    std::vector<b2Vec2>* pos_hist = this->position_histories.value(body);
+    pos_hist->push_back(pos);
+
+    if (pos_hist->size() > this->max_position_hist_entries){
+        pos_hist->erase(pos_hist->begin());
+    }
+
+    //TODO: preserve trail histories (to a point) when bodies merge?
+    for (uint i = 0; i < pos_hist->size()-1; ++i){
+        QPointF a = this->physPtToScrnPt(pos_hist->at(i));
+        QPointF b = this->physPtToScrnPt(pos_hist->at(i+1));
+        painter->drawLine(a, b);
+    }
+
+//    printf("history size: %lu\n", pos_hist->size());
 
     float radius = body->GetFixtureList()->GetShape()->m_radius;
 
@@ -165,6 +179,9 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
 
     painter->setPen(body_color);
     painter->setBrush(body_color);
+
+    QPointF body_center_px = this->physPtToScrnPt(pos);
+    painter->translate(body_center_px.x(), body_center_px.y());
 
 //    //https://stackoverflow.com/questions/8881923/how-to-convert-a-pointer-value-to-qstring
 //    QString ptrStr = QString("0x%1").arg(reinterpret_cast<quintptr>(body),QT_POINTER_SIZE * 2, 16, QChar('0'));
@@ -273,8 +290,17 @@ b2Body* ABSWindow::createBody(float radius, b2Vec2 position, b2Vec2 velocity){
     b2Body* b = this->world->CreateBody(&this->bodydef_template);
     b->CreateFixture(&fixturedef_template);
 
+    std::vector<b2Vec2>* pos_hist = new std::vector<b2Vec2>;
+    this->position_histories.insert(b, pos_hist);
+
     return b;
 
+}
+
+void ABSWindow::destroyBody(b2Body* b){
+    this->world->DestroyBody(b);
+    delete this->position_histories.value(b);
+    this->position_histories.remove(b);
 }
 
 void ABSWindow::doGameStep(){
@@ -307,10 +333,10 @@ void ABSWindow::doGameStep(){
 
         this->createBody(totalradius, totalpos, totalvelocity);
 
-        this->world->DestroyBody(coll.bodyA);
+        this->destroyBody(coll.bodyA);
         destroyed_bodies.push_back(coll.bodyA);
 
-        this->world->DestroyBody(coll.bodyB);
+        this->destroyBody(coll.bodyB);
         destroyed_bodies.push_back(coll.bodyB);
 
     }
