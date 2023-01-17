@@ -146,7 +146,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     //this is the HSV hue for light blue, which is where we want this spectrum to cap.
     float max_hue = 0.6;
 
-    float hue = max_hue*log(radius/10.0)/2.0; //maps 10 and 1000 to 0 and max_hue logarithmically
+    float hue = max_hue*log10(radius/10.0)/2.0; //maps 10 and 1000 to 0 and max_hue logarithmically
 //    printf("radius: %f; hue: %f\n", radius, hue);
 
     //cap hue to [0, max_hue]
