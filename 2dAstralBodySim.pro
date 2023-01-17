@@ -17,6 +17,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
 SOURCES += \
+    abscontactlistener.cpp \
     abswindow.cpp \
     box2d/src/collision/b2_broad_phase.cpp \
     box2d/src/collision/b2_chain_shape.cpp \
@@ -67,6 +68,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    abscontactlistener.h \
     abswindow.h \
     box2d/b2_api.h \
     box2d/b2_block_allocator.h \

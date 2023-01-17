@@ -9,6 +9,7 @@
 #include "box2d/box2d.h"
 
 #include <opengl2dwindow.h>
+#include <abscontactlistener.h>
 
 
 #define MILLIS_PER_SECOND (1000)
@@ -72,8 +73,16 @@ public:
 
     b2Vec2 scrnPtToPhysPt(QPointF screenPoint_p);
 
+    b2Body* createBody(float radius, b2Vec2 position, b2Vec2 velocity);
+
 
     QSize window_size;
+
+    bool mouse_down_create_body = false;
+    bool mouse_down_drag_view = false;
+
+    QPointF start_click_pos;
+    QPointF end_click_pos;
 
 
     //scaled up to increase scale of stuff
@@ -81,6 +90,7 @@ public:
     const float big_G = 6.6743015*pow(10, 0); //N*m^2/(kg^2)
 
     b2World* world = nullptr;
+    ABSContactListener* contactlistener = nullptr;
 
     float timeStep_s;
 

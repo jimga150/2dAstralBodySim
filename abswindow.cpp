@@ -18,6 +18,9 @@ ABSWindow::ABSWindow(){
 
     this->world = new b2World(b2Vec2(0, 0)); //no global gravity
 
+    this->contactlistener = new ABSContactListener;
+    this->world->SetContactListener(this->contactlistener);
+
     this->bodydef_template.type = b2_dynamicBody;
 
     this->circle_shape.m_radius = 10;
@@ -25,13 +28,13 @@ ABSWindow::ABSWindow(){
     fixturedef_template.density = 1;
     fixturedef_template.shape = &circle_shape;
 
-    this->bodydef_template.position.Set(50, 0);
-    b2Body* b = this->world->CreateBody(&this->bodydef_template);
-    b->CreateFixture(&fixturedef_template);
+//    this->bodydef_template.position.Set(50, 0);
+//    b2Body* b = this->world->CreateBody(&this->bodydef_template);
+//    b->CreateFixture(&fixturedef_template);
 
-    this->bodydef_template.position.Set(-50, 0);
-    b = this->world->CreateBody(&this->bodydef_template);
-    b->CreateFixture(&fixturedef_template);
+//    this->bodydef_template.position.Set(-50, 0);
+//    b = this->world->CreateBody(&this->bodydef_template);
+//    b->CreateFixture(&fixturedef_template);
 }
 
 ABSWindow::~ABSWindow(){
@@ -44,18 +47,61 @@ void ABSWindow::resizeEvent(QResizeEvent* event){
 
 void ABSWindow::mousePressEvent(QMouseEvent *ev){
 
+    if (this->mouse_down_create_body || this->mouse_down_drag_view) return;
+
+    switch(ev->button()){
+    case Qt::LeftButton:
+        this->mouse_down_create_body = true;
+        break;
+    case Qt::RightButton:
+        this->mouse_down_drag_view = true;
+        break;
+    default:
+        //do nothing
+        break;
+    }
+
+    this->start_click_pos = ev->position();
+    this->end_click_pos = ev->position();
 }
 
 void ABSWindow::mouseReleaseEvent(QMouseEvent *ev){
-    b2Vec2 pos = this->scrnPtToPhysPt(ev->position());
-    this->bodydef_template.position = pos;
-    b2Body* b = this->world->CreateBody(&this->bodydef_template);
-    b->CreateFixture(&fixturedef_template);
-    printf("creating body at (%f, %f)\n", pos.x, pos.y);
+
+    this->end_click_pos = ev->position();
+
+    if (this->mouse_down_create_body){
+
+        QPointF velocity_p = this->end_click_pos - this->start_click_pos;
+        b2Vec2 velocity_m(velocity_p.x()/this->viewscale_p_m, velocity_p.y()/this->viewscale_p_m);
+
+        b2Vec2 pos = this->scrnPtToPhysPt(this->start_click_pos);
+
+        this->createBody(10, pos, velocity_m);
+
+        printf("creating body at (%f, %f)\n", pos.x, pos.y);
+
+        this->mouse_down_create_body = false;
+
+    } else if (this->mouse_down_drag_view){
+        this->mouse_down_drag_view = false;
+    }
+
 }
 
 void ABSWindow::mouseMoveEvent(QMouseEvent *ev){
 
+    if (!this->mouse_down_create_body && !this->mouse_down_drag_view) return;
+
+    QPointF last_drag_pos = this->end_click_pos;
+
+    this->end_click_pos = ev->position();
+
+    if (this->mouse_down_drag_view){
+        QPointF view_offset_p = last_drag_pos - this->end_click_pos;
+        b2Vec2 view_offset_m(view_offset_p.x()/this->viewscale_p_m, view_offset_p.y()/this->viewscale_p_m);
+
+        this->viewcenter_m += view_offset_m;
+    }
 }
 
 void ABSWindow::setupWindow(){
@@ -187,8 +233,60 @@ b2Vec2 ABSWindow::scrnPtToPhysPt(QPointF screenPoint_p){
                 );
 }
 
+b2Body* ABSWindow::createBody(float radius, b2Vec2 position, b2Vec2 velocity){
+
+    this->bodydef_template.position = position;
+    this->bodydef_template.linearVelocity = velocity;
+    this->circle_shape.m_radius = radius;
+
+    b2Body* b = this->world->CreateBody(&this->bodydef_template);
+    b->CreateFixture(&fixturedef_template);
+
+    return b;
+
+}
+
 void ABSWindow::doGameStep(){
 
+    std::vector<b2Body*> destroyed_bodies;
+
+    //combine bodies that have collided
+    for (collision_struct coll : this->contactlistener->collisions){
+
+        //check if one of the bodies already got merged. if so just skip it, it will probably merge a few steps from now anyways.
+        if (find(destroyed_bodies.begin(), destroyed_bodies.end(), coll.bodyA) != destroyed_bodies.end()){
+            continue;
+        }
+
+        if (find(destroyed_bodies.begin(), destroyed_bodies.end(), coll.bodyB) != destroyed_bodies.end()){
+            continue;
+        }
+
+        float totalmass = coll.bodyA->GetMass();
+        totalmass += coll.bodyB->GetMass();
+        b2Vec2 totalmomentum = coll.bodyA->GetMass()*coll.bodyA->GetLinearVelocity();
+        totalmomentum += coll.bodyB->GetMass()*coll.bodyB->GetLinearVelocity();
+
+        b2Vec2 totalvelocity = (1.0f/totalmass)*totalmomentum;
+
+        float totalarea = totalmass/this->fixturedef_template.density;
+        float totalradius = sqrt(totalarea/M_PI);
+
+        b2Vec2 totalpos = (1.0f/totalmass)*(coll.bodyA->GetMass()*coll.bodyA->GetWorldCenter() + coll.bodyB->GetMass()*coll.bodyB->GetWorldCenter());
+
+        this->createBody(totalradius, totalpos, totalvelocity);
+
+        this->world->DestroyBody(coll.bodyA);
+        destroyed_bodies.push_back(coll.bodyA);
+
+        this->world->DestroyBody(coll.bodyB);
+        destroyed_bodies.push_back(coll.bodyB);
+
+    }
+
+    this->contactlistener->collisions.clear();
+
+    //apply gravity
     for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
         b2Vec2 ForceAccum = b2Vec2(0, 0);
         for (b2Body* ob = this->world->GetBodyList(); ob; ob = ob->GetNext()){
@@ -208,6 +306,7 @@ void ABSWindow::doGameStep(){
     int velocityIterations = 8;
     int positionIterations = 3;
     this->world->Step(this->timeStep_s, velocityIterations, positionIterations);
+
 
 //    printf("step: ts = %f s\n", this->timeStep_s);
 }
