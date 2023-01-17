@@ -2,6 +2,7 @@
 #define MainWindow_H
 
 #include <QMainWindow>
+#include <QRandomGenerator>
 
 #include "abswindow.h"
 
@@ -21,6 +22,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+public slots:
+
+    void makedisk();
+
 };
 
 #endif // MainWindow_H
