@@ -123,7 +123,7 @@ void ABSWindow::setupWindow(){
 void ABSWindow::render(QPainter &painter){
 
     painter.setPen(Qt::SolidLine);
-    painter.setPen(QColor(255, 0, 0));
+    painter.setPen(QColor(255, 255, 255));
     painter.setBrush(Qt::NoBrush);
 
     for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
