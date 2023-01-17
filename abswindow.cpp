@@ -256,6 +256,12 @@ b2Vec2 ABSWindow::scrnPtToPhysPt(QPointF screenPoint_p){
 
 b2Body* ABSWindow::createBody(float radius, b2Vec2 position, b2Vec2 velocity){
 
+    for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+        if (b->GetWorldCenter() == position){
+            return nullptr;
+        }
+    }
+
     this->bodydef_template.position = position;
     this->bodydef_template.linearVelocity = velocity;
     this->circle_shape.m_radius = radius;
