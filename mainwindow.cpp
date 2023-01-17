@@ -41,28 +41,36 @@ void MainWindow::makedisk(){
 
     QRandomGenerator rng = QRandomGenerator::securelySeeded();
 
-    float bigbody_radius = 1;
+    QSize simwindow_size = this->simwindow.window_size;
+    int smaller_window_dim = simwindow_size.height();
+    if (simwindow_size.width() < simwindow_size.height()){
+        smaller_window_dim = simwindow_size.width();
+    }
+
+    float disk_radius = (smaller_window_dim/this->simwindow.viewscale_p_m)/2.0;
+
+    float bigbody_radius = disk_radius/10;
     float bigbody_mass = M_PI*bigbody_radius*bigbody_radius*this->simwindow.fixturedef_template.density;
 
     this->simwindow.createBody(bigbody_radius, this->simwindow.viewcenter_m, b2Vec2(0, 0));
 
     for (int i = 0; i < 100; ++i){
 
-        float dist = bigbody_radius*(rng.generateDouble()*12 + 8);
+        float dist = disk_radius*(rng.generateDouble()*0.7 + 0.3);
         float angle = i*2*M_PI/100.0;
 
         float x = dist*cos(angle);
         float y = dist*sin(angle);
         b2Vec2 pos(x, y);
 
-        float radius = rng.generateDouble()*0.05 + 0.05;
+        float smallbody_radius = bigbody_radius*(rng.generateDouble()*0.05 + 0.05);
 
         float velocity_mag = sqrt(this->simwindow.big_G*bigbody_mass/dist);
         float v_x = velocity_mag*cos(angle + M_PI/2);
         float v_y = velocity_mag*sin(angle + M_PI/2);
         b2Vec2 vel(v_x, v_y);
 
-        this->simwindow.createBody(radius, pos + this->simwindow.viewcenter_m, vel);
+        this->simwindow.createBody(smallbody_radius, pos + this->simwindow.viewcenter_m, vel);
     }
 
 }
