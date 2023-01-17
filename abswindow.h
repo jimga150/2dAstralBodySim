@@ -98,7 +98,7 @@ public:
     float timeStep_s;
 
     b2Vec2 viewcenter_m = b2Vec2(0, 0);
-    float viewscale_p_m = 1;
+    float viewscale_p_m = 10;
 
     b2BodyDef bodydef_template;
     b2FixtureDef fixturedef_template;

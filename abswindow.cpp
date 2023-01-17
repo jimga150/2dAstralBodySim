@@ -76,7 +76,7 @@ void ABSWindow::mouseReleaseEvent(QMouseEvent *ev){
 
         b2Vec2 pos = this->scrnPtToPhysPt(this->start_click_pos);
 
-        this->createBody(10, pos, velocity_m);
+        this->createBody(1, pos, velocity_m);
 
 //        printf("creating body at (%f, %f)\n", pos.x, pos.y);
 
@@ -164,7 +164,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     //this is the HSV hue for light blue, which is where we want this spectrum to cap.
     float max_hue = 0.6;
 
-    float hue = max_hue*log10(radius/10.0)/2.0; //maps 10 and 1000 to 0 and max_hue logarithmically
+    float hue = max_hue*log10(radius)/2.0; //maps 1 and 100 to 0 and max_hue logarithmically
 //    printf("radius: %f; hue: %f\n", radius, hue);
 
     //cap hue to [0, max_hue]
