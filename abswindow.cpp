@@ -78,7 +78,7 @@ void ABSWindow::mouseReleaseEvent(QMouseEvent *ev){
 
         this->createBody(10, pos, velocity_m);
 
-        printf("creating body at (%f, %f)\n", pos.x, pos.y);
+//        printf("creating body at (%f, %f)\n", pos.x, pos.y);
 
         this->mouse_down_create_body = false;
 
