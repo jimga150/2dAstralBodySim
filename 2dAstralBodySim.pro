@@ -1,4 +1,4 @@
-QT       += core gui concurrent multimedia opengl
+QT       += core gui opengl
 
 CONFIG += c++17
 
