@@ -41,7 +41,7 @@ void MainWindow::makedisk(){
 
     QRandomGenerator rng = QRandomGenerator::securelySeeded();
 
-    float bigbody_radius = 10;
+    float bigbody_radius = 1;
     float bigbody_mass = M_PI*bigbody_radius*bigbody_radius*this->simwindow.fixturedef_template.density;
 
     this->simwindow.createBody(bigbody_radius, this->simwindow.viewcenter_m, b2Vec2(0, 0));
@@ -55,9 +55,9 @@ void MainWindow::makedisk(){
         float y = dist*sin(angle);
         b2Vec2 pos(x, y);
 
-        float radius = rng.generateDouble()*0.5 + 0.5;
+        float radius = rng.generateDouble()*0.05 + 0.05;
 
-        float velocity_mag = 8*sqrt(this->simwindow.big_G*bigbody_mass/dist);
+        float velocity_mag = sqrt(this->simwindow.big_G*bigbody_mass/dist);
         float v_x = velocity_mag*cos(angle + M_PI/2);
         float v_y = velocity_mag*sin(angle + M_PI/2);
         b2Vec2 vel(v_x, v_y);
