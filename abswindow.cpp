@@ -357,7 +357,8 @@ void ABSWindow::doGameStep(){
 //            printf("Adding force: x = %f, y = %f\n", force_to_add.x, force_to_add.y);
             ForceAccum += force_to_add;
         }
-        b->ApplyLinearImpulseToCenter(ForceAccum, true);
+//        b->ApplyLinearImpulseToCenter(ForceAccum, true);
+        b->ApplyForceToCenter(ForceAccum, true);
     }
 
     int velocityIterations = 8;
