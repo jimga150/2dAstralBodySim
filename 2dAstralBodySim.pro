@@ -1,4 +1,4 @@
-QT       += core gui opengl
+QT       += core gui opengl widgets
 
 CONFIG += c++17
 
@@ -64,6 +64,7 @@ SOURCES += \
     box2d/src/dynamics/b2_world.cpp \
     box2d/src/dynamics/b2_world_callbacks.cpp \
     box2d/src/rope/b2_rope.cpp \
+    mainwindow.cpp \
     opengl2dwindow.cpp \
     main.cpp
 
@@ -119,9 +120,13 @@ HEADERS += \
     box2d/src/dynamics/b2_island.h \
     box2d/src/dynamics/b2_polygon_circle_contact.h \
     box2d/src/dynamics/b2_polygon_contact.h \
+    mainwindow.h \
     opengl2dwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    mainwindow.ui
