@@ -111,6 +111,8 @@ protected:
 
     void mouseMoveEvent(QMouseEvent* ev) override;
 
+    void wheelEvent(QWheelEvent *ev) override;
+
 };
 
 #endif // ABSWINDOW_H

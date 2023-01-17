@@ -104,6 +104,10 @@ void ABSWindow::mouseMoveEvent(QMouseEvent *ev){
     }
 }
 
+void ABSWindow::wheelEvent(QWheelEvent *ev){
+    this->viewscale_p_m *= 1 + ev->pixelDelta().y()*0.001;
+}
+
 void ABSWindow::setupWindow(){
     QScreen* screen = this->screen();
 
