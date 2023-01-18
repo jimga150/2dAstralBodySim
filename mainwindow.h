@@ -27,6 +27,8 @@ public slots:
 
     void makedisk();
 
+    void clearAll();
+
 };
 
 #endif // MainWindow_H

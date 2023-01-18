@@ -20,14 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->simwindow.show();
     this->simwindow.setAnimating(true);
 
-    QList<QAction*> preset_actions = this->ui->menuPresets->actions();
-
-    for (QAction* action : preset_actions){
-        if (action->text() == QString("Accretion Disk")){
-            connect(action, &QAction::triggered, this, &MainWindow::makedisk);
-        }
-    }
-
+    connect(this->ui->actionAccretion_Disk, &QAction::triggered, this, &MainWindow::makedisk);
+    connect(this->ui->actionClear_All, &QAction::triggered, this, &MainWindow::clearAll);
 
 }
 
@@ -73,4 +67,10 @@ void MainWindow::makedisk(){
         this->simwindow.createBody(smallbody_radius, pos + this->simwindow.viewcenter_m, vel);
     }
 
+}
+
+void MainWindow::clearAll(){
+    for (b2Body* b = this->simwindow.world->GetBodyList(); b; b = b->GetNext()){
+        this->simwindow.destroyBody(b);
+    }
 }

@@ -44,12 +44,24 @@
     </property>
     <addaction name="actionAccretion_Disk"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionClear_All"/>
+   </widget>
+   <addaction name="menuOptions"/>
    <addaction name="menuPresets"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAccretion_Disk">
    <property name="text">
     <string>Accretion Disk</string>
+   </property>
+  </action>
+  <action name="actionClear_All">
+   <property name="text">
+    <string>Clear All</string>
    </property>
   </action>
  </widget>
