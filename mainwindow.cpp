@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&this->simwindow, &ABSWindow::numBodiesChanged, this, &MainWindow::updateBodyCount);
 
+    this->on_trailTLenSpinBox_valueChanged(this->ui->trailTLenSpinBox->value());
+
 }
 
 MainWindow::~MainWindow(){
@@ -103,5 +105,11 @@ void MainWindow::on_clearButton_clicked(){
     for (b2Body* b = this->simwindow.world->GetBodyList(); b; b = b->GetNext()){
         this->simwindow.destroyBody(b);
     }
+}
+
+
+void MainWindow::on_trailTLenSpinBox_valueChanged(double arg1){
+    int num_frames = arg1/this->simwindow.timeStep_s;
+    this->simwindow.max_position_hist_entries = num_frames;
 }
 

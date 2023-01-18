@@ -52,6 +52,32 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="9">
+     <widget class="QDoubleSpinBox" name="trailTLenSpinBox">
+      <property name="suffix">
+       <string>s</string>
+      </property>
+      <property name="decimals">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <double>100.000000000000000</double>
+      </property>
+      <property name="stepType">
+       <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="10">
+     <layout class="QGridLayout" name="windowWidget">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+     </layout>
+    </item>
     <item row="1" column="6">
      <spacer name="horizontalSpacer">
       <property name="orientation">
@@ -72,6 +98,13 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="7">
+     <widget class="QCheckBox" name="trailsCheckBox">
+      <property name="text">
+       <string>Trails </string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="2">
      <widget class="QPushButton" name="pauseplayButton">
       <property name="text">
@@ -86,15 +119,12 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="7">
-     <widget class="QCheckBox" name="trailsCheckBox">
+    <item row="1" column="8">
+     <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Trails </string>
+       <string> Length </string>
       </property>
      </widget>
-    </item>
-    <item row="2" column="0" colspan="8">
-     <layout class="QGridLayout" name="windowWidget"/>
     </item>
    </layout>
   </widget>

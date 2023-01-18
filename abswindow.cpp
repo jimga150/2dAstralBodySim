@@ -373,7 +373,7 @@ void ABSWindow::doGameStep(){
         pos_hist->push_back(b->GetWorldCenter());
 
         if (pos_hist->size() > this->max_position_hist_entries){
-            pos_hist->erase(pos_hist->begin());
+            pos_hist->erase(pos_hist->begin(), pos_hist->end() - this->max_position_hist_entries);
         }
     }
 
