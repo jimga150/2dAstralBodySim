@@ -31,6 +31,7 @@ public slots:
 
 private slots:
     void on_radiusSpinBox_valueChanged(double arg1);
+    void on_pauseplayButton_clicked();
 };
 
 #endif // MainWindow_H

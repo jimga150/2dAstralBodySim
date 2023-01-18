@@ -144,17 +144,13 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
 //    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
 
     std::vector<b2Vec2>* pos_hist = this->position_histories.value(body);
-    pos_hist->push_back(pos);
 
-    if (pos_hist->size() > this->max_position_hist_entries){
-        pos_hist->erase(pos_hist->begin());
-    }
-
-    //TODO: preserve trail histories (to a point) when bodies merge?
-    for (uint i = 0; i < pos_hist->size()-1; ++i){
-        QPointF a = this->physPtToScrnPt(pos_hist->at(i));
-        QPointF b = this->physPtToScrnPt(pos_hist->at(i+1));
-        painter->drawLine(a, b);
+    if (pos_hist->size() > 1){
+        for (uint i = 0; i < pos_hist->size()-1; ++i){
+            QPointF a = this->physPtToScrnPt(pos_hist->at(i));
+            QPointF b = this->physPtToScrnPt(pos_hist->at(i+1));
+            painter->drawLine(a, b);
+        }
     }
 
 //    printf("history size: %lu\n", pos_hist->size());
@@ -305,6 +301,8 @@ void ABSWindow::destroyBody(b2Body* b){
 
 void ABSWindow::doGameStep(){
 
+    if (this->paused) return;
+
     std::vector<b2Body*> destroyed_bodies;
 
     //combine bodies that have collided
@@ -345,6 +343,7 @@ void ABSWindow::doGameStep(){
 
     //apply gravity
     for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+
         b2Vec2 ForceAccum = b2Vec2(0, 0);
         for (b2Body* ob = this->world->GetBodyList(); ob; ob = ob->GetNext()){
             if (ob == b) continue;
@@ -359,6 +358,14 @@ void ABSWindow::doGameStep(){
         }
 //        b->ApplyLinearImpulseToCenter(ForceAccum, true);
         b->ApplyForceToCenter(ForceAccum, true);
+
+        //TODO: preserve trail histories (to a point) when bodies merge?
+        std::vector<b2Vec2>* pos_hist = this->position_histories.value(b);
+        pos_hist->push_back(b->GetWorldCenter());
+
+        if (pos_hist->size() > this->max_position_hist_entries){
+            pos_hist->erase(pos_hist->begin());
+        }
     }
 
     int velocityIterations = 8;

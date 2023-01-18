@@ -78,3 +78,13 @@ void MainWindow::on_radiusSpinBox_valueChanged(double arg1){
     this->simwindow.default_body_radius_m = arg1;
 }
 
+
+void MainWindow::on_pauseplayButton_clicked(){
+    this->simwindow.paused = !this->simwindow.paused;
+    if (this->simwindow.paused){
+        this->ui->pauseplayButton->setText("Resume");
+    } else {
+        this->ui->pauseplayButton->setText("Pause");
+    }
+}
+
