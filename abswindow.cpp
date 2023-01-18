@@ -142,7 +142,7 @@ void ABSWindow::render(QPainter &painter){
         //a2 here is the maximum acceleration anything can experience when sitting on the surface of any one of my equally-dense bodies.
         float max_accel = this->big_G*M_PI*this->fixturedef_template.density;
 
-        float accel_correction_factor = phys_min_interval/max_accel;
+        float accel_correction_factor = phys_min_interval*2/max_accel;
 
         //calculate accelerations
         for (int x = col_interval/2; x < this->window_size.width(); x = x + col_interval){
