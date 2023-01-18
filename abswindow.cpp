@@ -71,7 +71,7 @@ void ABSWindow::mouseReleaseEvent(QMouseEvent *ev){
 
         this->createBody(this->default_body_radius_m, pos, velocity_m);
 
-//        printf("creating body at (%f, %f)\n", pos.x, pos.y);
+        //printf("creating body at (%f, %f)\n", pos.x, pos.y);
 
         this->mouse_down_create_body = false;
 
@@ -172,7 +172,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
 
     painter->save();
     b2Vec2 pos = body->GetPosition();
-//    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
+    //printf("Body position: (%f, %f) m\n", pos.x, pos.y);
 
     if (this->enable_trails){
         std::vector<b2Vec2>* pos_hist = this->position_histories.value(body);
@@ -186,7 +186,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
         }
     }
 
-//    printf("history size: %lu\n", pos_hist->size());
+    //printf("history size: %lu\n", pos_hist->size());
 
     float radius = body->GetFixtureList()->GetShape()->m_radius;
 
@@ -194,7 +194,7 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     float max_hue = 0.6;
 
     float hue = max_hue*((log10(radius)+1)/2.0); //maps 0.1 and 10 to 0 and max_hue logarithmically
-//    printf("radius: %f; hue: %f\n", radius, hue);
+    //printf("radius: %f; hue: %f\n", radius, hue);
 
     //cap hue to [0, max_hue]
     if (hue < 0) hue = 0;
@@ -212,12 +212,12 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     QPointF body_center_px = this->physPtToScrnPt(pos);
     painter->translate(body_center_px.x(), body_center_px.y());
 
-//    //https://stackoverflow.com/questions/8881923/how-to-convert-a-pointer-value-to-qstring
-//    QString ptrStr = QString("0x%1").arg(reinterpret_cast<quintptr>(body),QT_POINTER_SIZE * 2, 16, QChar('0'));
-//    //QString coordstr = QString("(%1, %2)").arg(body->GetPosition().x).arg(body->GetPosition().y);
-//    //printf("\t%s: %s\n", ptrStr.toUtf8().constData(), coordstr.toUtf8().constData());
+    ////https://stackoverflow.com/questions/8881923/how-to-convert-a-pointer-value-to-qstring
+    //QString ptrStr = QString("0x%1").arg(reinterpret_cast<quintptr>(body),QT_POINTER_SIZE * 2, 16, QChar('0'));
+    ////QString coordstr = QString("(%1, %2)").arg(body->GetPosition().x).arg(body->GetPosition().y);
+    ////printf("\t%s: %s\n", ptrStr.toUtf8().constData(), coordstr.toUtf8().constData());
 
-//    painter->drawText(QPoint(0, 0), ptrStr);
+    //painter->drawText(QPoint(0, 0), ptrStr);
 
     for (b2Fixture* f = body->GetFixtureList(); f; f = f->GetNext()){
         switch(f->GetType()){
@@ -284,8 +284,8 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
         }
     }
 
-//    b2Vec2 com_m = body->GetLocalCenter();
-//    painter->drawEllipse(QPointF(com_m.x, com_m.y)*this->viewscale_p_m, 10, 5);
+    //b2Vec2 com_m = body->GetLocalCenter();
+    //painter->drawEllipse(QPointF(com_m.x, com_m.y)*this->viewscale_p_m, 10, 5);
 
     painter->restore();
 }
@@ -385,7 +385,7 @@ void ABSWindow::doGameStep(){
     for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
 
         b2Vec2 Force = b->GetMass()*this->getAccelAt(b->GetWorldCenter(), b);
-        //        b->ApplyLinearImpulseToCenter(Force, true);
+        //b->ApplyLinearImpulseToCenter(Force, true);
         b->ApplyForceToCenter(Force, true);
 
         //TODO: preserve trail histories (to a point) when bodies merge?
