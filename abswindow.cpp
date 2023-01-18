@@ -115,14 +115,6 @@ void ABSWindow::setupWindow(){
 
 void ABSWindow::render(QPainter &painter){
 
-    painter.setPen(Qt::SolidLine);
-    painter.setPen(QColor(255, 255, 255));
-    painter.setBrush(Qt::NoBrush);
-
-    for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
-        this->drawBodyTo(&painter, b);
-    }
-
     if (this->enable_gravfield && this->world->GetBodyCount() > 0){
 
         painter.setPen(Qt::SolidLine);
@@ -183,6 +175,14 @@ void ABSWindow::render(QPainter &painter){
                 painter.drawLine(screenStartPoint, screenEndPoint);
             }
         }
+    }
+
+    painter.setPen(Qt::SolidLine);
+    painter.setPen(QColor(255, 255, 255));
+    painter.setBrush(Qt::NoBrush);
+
+    for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+        this->drawBodyTo(&painter, b);
     }
 
 }
