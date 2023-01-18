@@ -119,3 +119,12 @@ void MainWindow::on_resetViewButton_clicked(){
     this->simwindow.viewscale_p_m = this->simwindow.viewscale_p_m_default;
 }
 
+
+void MainWindow::on_gravFieldCheckBox_stateChanged(int arg1){
+    if (arg1 == Qt::Unchecked){
+        this->simwindow.enable_gravfield = false;
+    } else {
+        this->simwindow.enable_gravfield = true;
+    }
+}
+

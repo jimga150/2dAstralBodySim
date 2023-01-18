@@ -36,6 +36,7 @@ private slots:
     void on_clearButton_clicked();
     void on_trailTLenSpinBox_valueChanged(double arg1);
     void on_resetViewButton_clicked();
+    void on_gravFieldCheckBox_stateChanged(int arg1);
 };
 
 #endif // MainWindow_H

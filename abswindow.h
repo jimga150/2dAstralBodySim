@@ -70,6 +70,8 @@ public:
 
     void doGameStep() override;
 
+    b2Vec2 getAccelAt(b2Vec2 worldPoint, b2Body* exception_body = nullptr);
+
     void drawBodyTo(QPainter* painter, b2Body* body);
 
     QPointF physPtToScrnPt(b2Vec2 worldPoint_m);
@@ -102,6 +104,7 @@ public:
     bool paused = false;
 
     bool enable_trails = true;
+    bool enable_gravfield = false;
 
     const b2Vec2 viewcenter_m_default = b2Vec2(0, 0);
     const float viewscale_p_m_default = 100;

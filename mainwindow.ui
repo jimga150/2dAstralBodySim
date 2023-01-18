@@ -71,12 +71,12 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="10">
-     <layout class="QGridLayout" name="windowWidget">
-      <property name="spacing">
-       <number>0</number>
+    <item row="1" column="8">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string> Length </string>
       </property>
-     </layout>
+     </widget>
     </item>
     <item row="1" column="6">
      <spacer name="horizontalSpacer">
@@ -101,7 +101,7 @@
     <item row="1" column="7">
      <widget class="QCheckBox" name="trailsCheckBox">
       <property name="text">
-       <string>Trails </string>
+       <string>Show Trails </string>
       </property>
      </widget>
     </item>
@@ -112,6 +112,13 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="resetViewButton">
+      <property name="text">
+       <string>Reset view</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -119,19 +126,19 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="8">
-     <widget class="QLabel" name="label_2">
+    <item row="1" column="10">
+     <widget class="QCheckBox" name="gravFieldCheckBox">
       <property name="text">
-       <string> Length </string>
+       <string>Show Gravity Field</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="resetViewButton">
-      <property name="text">
-       <string>Reset view</string>
+    <item row="2" column="0" colspan="11">
+     <layout class="QGridLayout" name="windowWidget">
+      <property name="spacing">
+       <number>0</number>
       </property>
-     </widget>
+     </layout>
     </item>
    </layout>
   </widget>

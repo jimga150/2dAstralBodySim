@@ -28,13 +28,6 @@ ABSWindow::ABSWindow(){
     fixturedef_template.density = 1;
     fixturedef_template.shape = &circle_shape;
 
-//    this->bodydef_template.position.Set(50, 0);
-//    b2Body* b = this->world->CreateBody(&this->bodydef_template);
-//    b->CreateFixture(&fixturedef_template);
-
-//    this->bodydef_template.position.Set(-50, 0);
-//    b = this->world->CreateBody(&this->bodydef_template);
-//    b->CreateFixture(&fixturedef_template);
 }
 
 ABSWindow::~ABSWindow(){
@@ -130,7 +123,45 @@ void ABSWindow::render(QPainter &painter){
         this->drawBodyTo(&painter, b);
     }
 
-//    printf("render\n");
+    if (this->enable_gravfield){
+
+        painter.setPen(Qt::SolidLine);
+        painter.setPen(QColor(150, 150, 150));
+        painter.setBrush(Qt::NoBrush);
+
+        int num_rows = 10;
+        int num_cols = 10;
+
+        int row_interval = this->window_size.height()/num_rows;
+        int col_interval = this->window_size.width()/num_cols;
+
+        int min_interval = row_interval;
+        if (col_interval < row_interval) min_interval = col_interval;
+
+        float phys_min_interval = min_interval*1.0/viewscale_p_m;
+
+        for (int x = col_interval/2; x < this->window_size.width(); x = x + col_interval){
+            for (int y = row_interval/2; y < this->window_size.height(); y = y + row_interval){
+
+                QPoint screenStartPoint = QPoint(x, y);
+
+                b2Vec2 worldPoint = this->scrnPtToPhysPt(screenStartPoint);
+                b2Vec2 accel = this->getAccelAt(worldPoint);
+
+                if(accel.Length() > phys_min_interval){
+                    accel.Normalize();
+                    accel *= phys_min_interval;
+                }
+
+                b2Vec2 vectorHeadPoint = worldPoint + accel;
+
+                QPoint screenEndPoint = this->physPtToScrnPt(vectorHeadPoint).toPoint();
+
+                painter.drawLine(screenStartPoint, screenEndPoint);
+
+            }
+        }
+    }
 
 }
 
@@ -353,20 +384,9 @@ void ABSWindow::doGameStep(){
     //apply gravity
     for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
 
-        b2Vec2 ForceAccum = b2Vec2(0, 0);
-        for (b2Body* ob = this->world->GetBodyList(); ob; ob = ob->GetNext()){
-            if (ob == b) continue;
-            b2Vec2 vect_to_ob = ob->GetWorldCenter() - b->GetWorldCenter();
-            float force_mag = big_G*ob->GetMass()*b->GetMass()/vect_to_ob.LengthSquared();
-//            printf("Force magnitude between b and ob: %f N\n", force_mag);
-            b2Vec2 force_to_add = vect_to_ob;
-            force_to_add.Normalize();
-            force_to_add *= force_mag;
-//            printf("Adding force: x = %f, y = %f\n", force_to_add.x, force_to_add.y);
-            ForceAccum += force_to_add;
-        }
-//        b->ApplyLinearImpulseToCenter(ForceAccum, true);
-        b->ApplyForceToCenter(ForceAccum, true);
+        b2Vec2 Force = b->GetMass()*this->getAccelAt(b->GetWorldCenter(), b);
+        //        b->ApplyLinearImpulseToCenter(Force, true);
+        b->ApplyForceToCenter(Force, true);
 
         //TODO: preserve trail histories (to a point) when bodies merge?
         std::vector<b2Vec2>* pos_hist = this->position_histories.value(b);
@@ -381,6 +401,25 @@ void ABSWindow::doGameStep(){
     int positionIterations = 3;
     this->world->Step(this->timeStep_s, velocityIterations, positionIterations);
 
+}
 
-//    printf("step: ts = %f s\n", this->timeStep_s);
+b2Vec2 ABSWindow::getAccelAt(b2Vec2 worldPoint, b2Body* exception_body){
+
+    b2Vec2 AccelAccum = b2Vec2(0, 0);
+
+    for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+
+        if (b == exception_body) continue;
+
+        b2Vec2 vect_to_ob = b->GetWorldCenter() - worldPoint;
+
+        float accel_mag = big_G*b->GetMass()/vect_to_ob.LengthSquared();
+
+        b2Vec2 accel_to_add = vect_to_ob;
+        accel_to_add.Normalize();
+        accel_to_add *= accel_mag;
+
+        AccelAccum += accel_to_add;
+    }
+    return AccelAccum;
 }
