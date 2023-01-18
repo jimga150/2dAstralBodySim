@@ -35,6 +35,7 @@ private slots:
     void on_trailsCheckBox_stateChanged(int arg1);
     void on_clearButton_clicked();
     void on_trailTLenSpinBox_valueChanged(double arg1);
+    void on_resetViewButton_clicked();
 };
 
 #endif // MainWindow_H

@@ -113,3 +113,9 @@ void MainWindow::on_trailTLenSpinBox_valueChanged(double arg1){
     this->simwindow.max_position_hist_entries = num_frames;
 }
 
+
+void MainWindow::on_resetViewButton_clicked(){
+    this->simwindow.viewcenter_m = this->simwindow.viewcenter_m_default;
+    this->simwindow.viewscale_p_m = this->simwindow.viewscale_p_m_default;
+}
+

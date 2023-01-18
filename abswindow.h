@@ -103,8 +103,11 @@ public:
 
     bool enable_trails = true;
 
-    b2Vec2 viewcenter_m = b2Vec2(0, 0);
-    float viewscale_p_m = 100;
+    const b2Vec2 viewcenter_m_default = b2Vec2(0, 0);
+    const float viewscale_p_m_default = 100;
+
+    b2Vec2 viewcenter_m = viewcenter_m_default;
+    float viewscale_p_m = viewscale_p_m_default;
 
     float default_body_radius_m = 0.1;
 
