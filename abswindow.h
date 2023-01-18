@@ -56,10 +56,12 @@
 
 #define RETURN_IF_NULL_NOPRINT(ptr) RETURN_VAL_IF_NULL_NOPRINT(ptr, )
 
-class ABSWindow : public OpenGL2DWindow
-{
+class ABSWindow : public OpenGL2DWindow{
+
+    Q_OBJECT
+
 public:
-    ABSWindow();
+    explicit ABSWindow();
     ~ABSWindow() override;
 
     void setupWindow();
@@ -112,6 +114,10 @@ public:
 
     QHash<b2Body*, std::vector<b2Vec2>*> position_histories;
     uint max_position_hist_entries = 100;
+
+signals:
+
+    void numBodiesChanged(int numBodies);
 
 protected:
 

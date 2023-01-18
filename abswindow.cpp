@@ -291,14 +291,21 @@ b2Body* ABSWindow::createBody(float radius, b2Vec2 position, b2Vec2 velocity){
     std::vector<b2Vec2>* pos_hist = new std::vector<b2Vec2>;
     this->position_histories.insert(b, pos_hist);
 
+    emit this->numBodiesChanged(this->world->GetBodyCount());
+
     return b;
 
 }
 
 void ABSWindow::destroyBody(b2Body* b){
+
     this->world->DestroyBody(b);
+
     delete this->position_histories.value(b);
     this->position_histories.remove(b);
+
+    emit this->numBodiesChanged(this->world->GetBodyCount());
+
 }
 
 void ABSWindow::doGameStep(){

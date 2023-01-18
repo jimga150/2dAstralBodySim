@@ -27,6 +27,8 @@ public slots:
 
     void makedisk();
 
+    void updateBodyCount(int numBodies);
+
 private slots:
     void on_radiusSpinBox_valueChanged(double arg1);
     void on_pauseplayButton_clicked();

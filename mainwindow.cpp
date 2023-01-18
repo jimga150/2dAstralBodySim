@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->ui->trailsCheckBox->setChecked(this->simwindow.enable_trails);
 
+    connect(&this->simwindow, &ABSWindow::numBodiesChanged, this, &MainWindow::updateBodyCount);
+
 }
 
 MainWindow::~MainWindow(){
@@ -67,6 +69,10 @@ void MainWindow::makedisk(){
         this->simwindow.createBody(smallbody_radius, pos + this->simwindow.viewcenter_m, vel);
     }
 
+}
+
+void MainWindow::updateBodyCount(int numBodies){
+    this->ui->statusbar->showMessage(QString("Number of bodies: ") + QString::number(numBodies));
 }
 
 void MainWindow::on_radiusSpinBox_valueChanged(double arg1){
