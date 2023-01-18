@@ -21,10 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->simwindow.setAnimating(true);
 
     connect(this->ui->actionAccretion_Disk, &QAction::triggered, this, &MainWindow::makedisk);
-    connect(this->ui->actionClear_All, &QAction::triggered, this, &MainWindow::clearAll);
 
-    this->ui->actionTrails->setChecked(this->simwindow.enable_trails);
-    connect(this->ui->actionTrails, &QAction::toggled, this, &MainWindow::setTrails);
+    this->ui->trailsCheckBox->setChecked(this->simwindow.enable_trails);
 
 }
 
@@ -71,16 +69,6 @@ void MainWindow::makedisk(){
 
 }
 
-void MainWindow::clearAll(){
-    for (b2Body* b = this->simwindow.world->GetBodyList(); b; b = b->GetNext()){
-        this->simwindow.destroyBody(b);
-    }
-}
-
-void MainWindow::setTrails(bool trails_on){
-    this->simwindow.enable_trails = trails_on;
-}
-
 void MainWindow::on_radiusSpinBox_valueChanged(double arg1){
     this->simwindow.default_body_radius_m = arg1;
 }
@@ -92,6 +80,22 @@ void MainWindow::on_pauseplayButton_clicked(){
         this->ui->pauseplayButton->setText("Resume");
     } else {
         this->ui->pauseplayButton->setText("Pause");
+    }
+}
+
+
+void MainWindow::on_trailsCheckBox_stateChanged(int arg1){
+    if (arg1 == Qt::Unchecked){
+        this->simwindow.enable_trails = false;
+    } else {
+        this->simwindow.enable_trails = true;
+    }
+}
+
+
+void MainWindow::on_clearButton_clicked(){
+    for (b2Body* b = this->simwindow.world->GetBodyList(); b; b = b->GetNext()){
+        this->simwindow.destroyBody(b);
     }
 }
 

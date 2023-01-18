@@ -27,13 +27,11 @@ public slots:
 
     void makedisk();
 
-    void clearAll();
-
-    void setTrails(bool trails_on);
-
 private slots:
     void on_radiusSpinBox_valueChanged(double arg1);
     void on_pauseplayButton_clicked();
+    void on_trailsCheckBox_stateChanged(int arg1);
+    void on_clearButton_clicked();
 };
 
 #endif // MainWindow_H
