@@ -2,9 +2,7 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
 
     QSurfaceFormat format;
@@ -15,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->simwindow.setFormat(format);
 
     QWidget* windowcontainer = QWidget::createWindowContainer(&this->simwindow, this);
-    this->ui->centralwidget->layout()->addWidget(windowcontainer);
+    this->ui->windowWidget->addWidget(windowcontainer);
+
+    this->ui->radiusSpinBox->setValue(this->simwindow.default_body_radius_m);
 
     this->simwindow.show();
     this->simwindow.setAnimating(true);
@@ -25,8 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     delete ui;
     this->simwindow.deleteLater();
 }
@@ -74,3 +73,8 @@ void MainWindow::clearAll(){
         this->simwindow.destroyBody(b);
     }
 }
+
+void MainWindow::on_radiusSpinBox_valueChanged(double arg1){
+    this->simwindow.default_body_radius_m = arg1;
+}
+

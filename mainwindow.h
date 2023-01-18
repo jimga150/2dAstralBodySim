@@ -29,6 +29,8 @@ public slots:
 
     void clearAll();
 
+private slots:
+    void on_radiusSpinBox_valueChanged(double arg1);
 };
 
 #endif // MainWindow_H
