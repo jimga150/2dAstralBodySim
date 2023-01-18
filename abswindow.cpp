@@ -140,25 +140,47 @@ void ABSWindow::render(QPainter &painter){
 
         float phys_min_interval = min_interval*1.0/viewscale_p_m;
 
+        //since F = G*m1*m2/(r^2)
+        //F = ma
+        //a2 = F/m2
+        //a2 = G*m1/(r^2)
+        //m1 = pi*(r^2)*d
+        //a2 = G*pi*(r^2)*d/(r^2)
+        //a2 = G*pi*d
+        //a2 here is the maximum acceleration anything can experience when sitting on the surface of any one of my equally-dense bodies.
+        float max_accel = this->big_G*M_PI*this->fixturedef_template.density;
+
+        float accel_correction_factor = phys_min_interval/max_accel;
+
+        //calculate accelerations
         for (int x = col_interval/2; x < this->window_size.width(); x = x + col_interval){
             for (int y = row_interval/2; y < this->window_size.height(); y = y + row_interval){
 
                 QPoint screenStartPoint = QPoint(x, y);
-
                 b2Vec2 worldPoint = this->scrnPtToPhysPt(screenStartPoint);
+
+                //check to see if we are inside a body
+                bool inside_body = false;
+                for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+                    b2Vec2 pos_diff = b->GetWorldCenter() - worldPoint;
+                    float dist = pos_diff.Length();
+                    if (dist < b->GetFixtureList()->GetShape()->m_radius){
+                        inside_body = true;
+                        break;
+                    }
+                }
+                if (inside_body) continue;
+
+
                 b2Vec2 accel = this->getAccelAt(worldPoint);
 
-                if(accel.Length() > phys_min_interval){
-                    accel.Normalize();
-                    accel *= phys_min_interval;
-                }
+                accel *= accel_correction_factor;
 
                 b2Vec2 vectorHeadPoint = worldPoint + accel;
 
                 QPoint screenEndPoint = this->physPtToScrnPt(vectorHeadPoint).toPoint();
 
                 painter.drawLine(screenStartPoint, screenEndPoint);
-
             }
         }
     }
