@@ -143,13 +143,15 @@ void ABSWindow::drawBodyTo(QPainter* painter, b2Body* body){
     b2Vec2 pos = body->GetPosition();
 //    printf("Body position: (%f, %f) m\n", pos.x, pos.y);
 
-    std::vector<b2Vec2>* pos_hist = this->position_histories.value(body);
+    if (this->enable_trails){
+        std::vector<b2Vec2>* pos_hist = this->position_histories.value(body);
 
-    if (pos_hist->size() > 1){
-        for (uint i = 0; i < pos_hist->size()-1; ++i){
-            QPointF a = this->physPtToScrnPt(pos_hist->at(i));
-            QPointF b = this->physPtToScrnPt(pos_hist->at(i+1));
-            painter->drawLine(a, b);
+        if (pos_hist->size() > 1){
+            for (uint i = 0; i < pos_hist->size()-1; ++i){
+                QPointF a = this->physPtToScrnPt(pos_hist->at(i));
+                QPointF b = this->physPtToScrnPt(pos_hist->at(i+1));
+                painter->drawLine(a, b);
+            }
         }
     }
 

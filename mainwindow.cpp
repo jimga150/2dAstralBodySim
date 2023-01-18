@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this->ui->actionAccretion_Disk, &QAction::triggered, this, &MainWindow::makedisk);
     connect(this->ui->actionClear_All, &QAction::triggered, this, &MainWindow::clearAll);
 
+    this->ui->actionTrails->setChecked(this->simwindow.enable_trails);
+    connect(this->ui->actionTrails, &QAction::toggled, this, &MainWindow::setTrails);
+
 }
 
 MainWindow::~MainWindow(){
@@ -72,6 +75,10 @@ void MainWindow::clearAll(){
     for (b2Body* b = this->simwindow.world->GetBodyList(); b; b = b->GetNext()){
         this->simwindow.destroyBody(b);
     }
+}
+
+void MainWindow::setTrails(bool trails_on){
+    this->simwindow.enable_trails = trails_on;
 }
 
 void MainWindow::on_radiusSpinBox_valueChanged(double arg1){

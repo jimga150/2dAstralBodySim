@@ -99,6 +99,8 @@ public:
 
     bool paused = false;
 
+    bool enable_trails = true;
+
     b2Vec2 viewcenter_m = b2Vec2(0, 0);
     float viewscale_p_m = 100;
 

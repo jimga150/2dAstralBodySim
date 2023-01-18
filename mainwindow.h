@@ -29,6 +29,8 @@ public slots:
 
     void clearAll();
 
+    void setTrails(bool trails_on);
+
 private slots:
     void on_radiusSpinBox_valueChanged(double arg1);
     void on_pauseplayButton_clicked();
