@@ -123,7 +123,7 @@ void ABSWindow::render(QPainter &painter){
         this->drawBodyTo(&painter, b);
     }
 
-    if (this->enable_gravfield){
+    if (this->enable_gravfield && this->world->GetBodyCount() > 0){
 
         painter.setPen(Qt::SolidLine);
         painter.setPen(QColor(150, 150, 150));
