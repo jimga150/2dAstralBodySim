@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->on_trailTLenSpinBox_valueChanged(this->ui->trailTLenSpinBox->value());
 
+    this->ui->gravFieldLowRadioButton->toggle();
+
 }
 
 MainWindow::~MainWindow(){
@@ -126,5 +128,20 @@ void MainWindow::on_gravFieldCheckBox_stateChanged(int arg1){
     } else {
         this->simwindow.enable_gravfield = true;
     }
+}
+
+
+void MainWindow::on_gravFieldHighRadioButton_toggled(bool checked){
+    if (checked) this->simwindow.gravfield_rowscols = 50;
+}
+
+
+void MainWindow::on_gravFieldMedRadioButton_toggled(bool checked){
+    if (checked) this->simwindow.gravfield_rowscols = 20;
+}
+
+
+void MainWindow::on_gravFieldLowRadioButton_toggled(bool checked){
+    if (checked) this->simwindow.gravfield_rowscols = 10;
 }
 

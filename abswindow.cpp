@@ -129,8 +129,8 @@ void ABSWindow::render(QPainter &painter){
         painter.setPen(QColor(150, 150, 150));
         painter.setBrush(Qt::NoBrush);
 
-        int num_rows = 10;
-        int num_cols = 10;
+        int num_rows = this->gravfield_rowscols;
+        int num_cols = this->gravfield_rowscols;
 
         int row_interval = this->window_size.height()/num_rows;
         int col_interval = this->window_size.width()/num_cols;

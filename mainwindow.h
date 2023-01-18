@@ -37,6 +37,9 @@ private slots:
     void on_trailTLenSpinBox_valueChanged(double arg1);
     void on_resetViewButton_clicked();
     void on_gravFieldCheckBox_stateChanged(int arg1);
+    void on_gravFieldHighRadioButton_toggled(bool checked);
+    void on_gravFieldMedRadioButton_toggled(bool checked);
+    void on_gravFieldLowRadioButton_toggled(bool checked);
 };
 
 #endif // MainWindow_H

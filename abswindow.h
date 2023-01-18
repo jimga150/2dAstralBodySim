@@ -106,6 +106,8 @@ public:
     bool enable_trails = true;
     bool enable_gravfield = false;
 
+    int gravfield_rowscols = 10;
+
     const b2Vec2 viewcenter_m_default = b2Vec2(0, 0);
     const float viewscale_p_m_default = 100;
 
