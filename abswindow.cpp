@@ -365,19 +365,23 @@ void ABSWindow::doGameStep(){
 
     if (this->paused) return;
 
-    std::vector<b2Body*> destroyed_bodies;
-
     //combine bodies that have collided
     for (collision_struct coll : this->contactlistener->collisions){
 
-        //check if one of the bodies already got merged. if so just skip it, it will probably merge a few steps from now anyways.
-        if (find(destroyed_bodies.begin(), destroyed_bodies.end(), coll.bodyA) != destroyed_bodies.end()){
-            continue;
-        }
+        bool a_exists = false;
+        bool b_exists = false;
 
-        if (find(destroyed_bodies.begin(), destroyed_bodies.end(), coll.bodyB) != destroyed_bodies.end()){
-            continue;
+        //check if one of the bodies already got merged. if so just skip it, the third will probably merge a few steps from now anyways.
+        for (b2Body* b = this->world->GetBodyList(); b; b = b->GetNext()){
+            if (b == coll.bodyA){
+                a_exists = true;
+            } else if (b == coll.bodyB){
+                b_exists = true;
+            }
+
+            if (a_exists && b_exists) break;
         }
+        if (!(a_exists && b_exists)) continue;
 
         float totalmass = coll.bodyA->GetMass();
         totalmass += coll.bodyB->GetMass();
@@ -394,11 +398,7 @@ void ABSWindow::doGameStep(){
         this->createBody(totalradius, totalpos, totalvelocity);
 
         this->destroyBody(coll.bodyA);
-        destroyed_bodies.push_back(coll.bodyA);
-
         this->destroyBody(coll.bodyB);
-        destroyed_bodies.push_back(coll.bodyB);
-
     }
 
     this->contactlistener->collisions.clear();

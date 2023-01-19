@@ -49,12 +49,12 @@ void MainWindow::makedisk(){
 
     float disk_radius = (smaller_window_dim/this->simwindow.viewscale_p_m)/2.0;
 
-    float bigbody_radius = disk_radius/10;
+    float bigbody_radius = disk_radius/50;
     float bigbody_mass = M_PI*bigbody_radius*bigbody_radius*this->simwindow.fixturedef_template.density;
 
     this->simwindow.createBody(bigbody_radius, this->simwindow.viewcenter_m, b2Vec2(0, 0));
 
-    for (int i = 0; i < 100; ++i){
+    for (int i = 0; i < 1000; ++i){
 
         float dist = disk_radius*(rng.generateDouble()*0.7 + 0.3);
         float angle = i*2*M_PI/100.0;
